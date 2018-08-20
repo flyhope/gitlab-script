@@ -33,7 +33,7 @@
     // 执行播放操作
     function play() {
         // 删除除主体外全部元素
-        $("aside,header,.nav-sidebar,.wiki-page-header,.alert-wrapper").remove();
+        $("#feedly-mini,aside,header,.nav-sidebar,.wiki-page-header,.alert-wrapper").remove();
         $(".content-wrapper").removeClass("content-wrapper");
         $(".layout-page").removeClass("page-with-contextual-sidebar right-sidebar-expanded");
 
@@ -98,6 +98,7 @@
     // 展示内容
     function show(index) {
         $(".wiki").html("").hide().append(wikis[index]).fadeIn();
+        $("body,html").scrollTop(0);
     }
 
 })()
