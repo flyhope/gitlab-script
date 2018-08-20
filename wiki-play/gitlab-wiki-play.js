@@ -2,7 +2,7 @@
 // @name         Gitlab Wiki Player
 // @namespace    http://chengxuan.li
 // @version      0.1
-// @description  try to take over the world!
+// @description  Play Gitlab wiki like PPT!
 // @author       Leelmes <i@chengxuan.li>
 // @match        http*://*/*/wikis/*
 // @grant        none
