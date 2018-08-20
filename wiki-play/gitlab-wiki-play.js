@@ -1,13 +1,15 @@
 // ==UserScript==
-// @name         Gitlab Wiki Player
-// @name:zh-cn   Gitlab WIKI 播放器
-// @namespace    http://chengxuan.li
-// @version      0.1
-// @description  Play Gitlab wiki like PPT!
+// @name              Gitlab Wiki Player
+// @name:zh-cn        Gitlab WIKI 播放器
+// @namespace         http://chengxuan.li
+// @version           0.1
+// @description       Play Gitlab wiki like PPT!
 // @description:zh-cn 像PPT一样播放Gitlab WIKI
-// @author       Leelmes <i@chengxuan.li>
-// @match        http*://*/*/wikis/*
-// @grant        none
+// @author            Leelmes <i@chengxuan.li>
+// @match             http*://*/*/wikis/*
+// @contributionURL   https://www.paypal.me/flyhope
+// @supportURL        https://github.com/flyhope/gitlab-script/issues
+// @license           GNU General Public License v3.0 or later
 // ==/UserScript==
 (function() {
     'use strict';
