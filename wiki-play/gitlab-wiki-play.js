@@ -31,15 +31,30 @@
         $(".nav-controls").prepend('<a id="wiki-ppt-play" class="btn" href="javascript:void(0)"><span class="fa fa-play"></span></a>');
 
         // 绑定PPT按钮播放事件
-        $("#wiki-ppt-play").click(play);
+        $("#wiki-ppt-play").click(function() {
+            play();
+        });
+
+        // 绑定H1/H2标题播放按钮
+        $(".wiki").on("click", "[data-node=wiki-ppt-play-page]", function() {
+            $(this).remove();
+            play($(this).data("index"));
+        }).find("h1,h2").each(function(k, v) {
+            let obj = $(v)
+            obj.hover(function(){
+                obj.append(' <a data-node="wiki-ppt-play-page" data-index="' + k + '" href="javascript:void(0)"><span class="fa fa-play"></span></a>');
+            }, function() {
+                obj.find("[data-node=wiki-ppt-play-page]").remove();
+            })
+        });
     }
 
     // 执行播放操作
-    function play() {
+    function play(show_index = 0) {
         // 删除除主体外全部元素
         $("#feedly-mini,aside,header,.nav-sidebar,.wiki-page-header,.alert-wrapper").remove();
         $(".content-wrapper").removeClass("content-wrapper");
-        $(".layout-page").removeClass("page-with-contextual-sidebar right-sidebar-expanded");
+        $(".layout-page").removeClass("page-with-contextual-sidebar right-sidebar-expanded").css("padding-left", 0);
 
         // 整理数据，并清空现有WIKI数据结构
         if (!wikis.length) {
@@ -51,7 +66,10 @@
                     newIndex = true;
                 }
                 if (v.tagName === "H2") {
-                    index++;
+                    if (typeof wikis[index] !== "undefined") {
+                        index++;
+                    }
+                    
                     newIndex = true;
                 }
 
@@ -64,10 +82,9 @@
         }
 
         // 开始播放
-        current = -1;
-        $(".wiki").html("");
-        next();
-        $("body").css("zoom", "2.5")
+        $(".wiki").empty();
+        $("body").css("zoom", "2")
+        show(show_index)
 
         // 绑定按键
         $("body").keydown(function(e){
@@ -86,21 +103,20 @@
     // 下一页
     function next() {
         if (wikis.length >= current + 2) {
-            current++;
-            show(current);
+            show(current + 1);
         }
     }
 
     // 上一页
     function prev() {
         if (current > 0) {
-            current--;
-            show(current);
+            show(current - 1);
         }
     }
 
     // 展示内容
     function show(index) {
+        current = index;
         $(".wiki").html("").hide().append(wikis[index]).fadeIn();
         $("body,html").scrollTop(0);
     }
