@@ -2,12 +2,15 @@
 // @name              Gitlab Wiki Player
 // @name:zh-cn        Gitlab WIKI 播放器
 // @namespace         http://chengxuan.li
-// @version           0.1
+// @version           0.2
 // @description       Play Gitlab wiki like PPT!
 // @description:zh-cn 像PPT一样播放Gitlab WIKI
 // @author            Leelmes <i@chengxuan.li>
 // @match             http*://*/*/wikis/*
+// @match             http*://*/*/merge_requests/*
+// @match             http*://*/*/snippets/*
 // @contributionURL   https://www.paypal.me/flyhope
+// @grant             none
 // @supportURL        https://github.com/flyhope/gitlab-script/issues
 // @license           GNU General Public License v3.0 or later
 // ==/UserScript==
@@ -29,6 +32,7 @@
     function main() {
         // 插入播放按钮
         $(".nav-controls").prepend('<a id="wiki-ppt-play" class="btn" href="javascript:void(0)"><span class="fa fa-play"></span></a>');
+        $(".issue-btn-group,.detail-page-header-actions > .hidden-xs").prepend('<a id="wiki-ppt-play" class="btn pull-left" href="javascript:void(0)"><span class="fa fa-play"></span></a>');
 
         // 绑定PPT按钮播放事件
         $("#wiki-ppt-play").click(function() {
@@ -51,40 +55,44 @@
 
     // 执行播放操作
     function play(show_index = 0) {
-        // 删除除主体外全部元素
+        // 删除WIKI除主体外全部元素
         $("#feedly-mini,aside,header,.nav-sidebar,.wiki-page-header,.alert-wrapper").remove();
         $(".content-wrapper").removeClass("content-wrapper");
         $(".layout-page").removeClass("page-with-contextual-sidebar right-sidebar-expanded").css("padding-left", 0);
 
-        // 整理数据，并清空现有WIKI数据结构
-        if (!wikis.length) {
-            $(".wiki").children().each(function(k, v){
-                let index = wikis.length - 1;
-                let newIndex = false;
-                if (index < 0) {
-                    index = 0;
-                    newIndex = true;
-                }
-                if (v.tagName === "H2") {
-                    if (typeof wikis[index] !== "undefined") {
-                        index++;
+        // 删除mergeRequest除主体外全部元素
+        $(".alert-wrapper,.detail-page-header,.detail-page-description,.mr-state-widget,.content-block,.merge-request-tabs-holder,.mr-version-controls").remove();
+
+        if ($(".wiki").length) {
+            // 整理数据，并清空现有WIKI数据结构
+            if (!wikis.length) {
+                $(".wiki").children().each(function(k, v){
+                    let index = wikis.length - 1;
+                    let newIndex = false;
+                    if (index < 0) {
+                        index = 0;
+                        newIndex = true;
                     }
-                    
-                    newIndex = true;
-                }
+                    if (v.tagName === "H2") {
+                        if (typeof wikis[index] !== "undefined") {
+                            index++;
+                        }
+                        newIndex = true;
+                    }
 
-                if (newIndex) {
-                    wikis[index] = [];
-                }
+                    if (newIndex) {
+                        wikis[index] = [];
+                    }
 
-                wikis[index].push(v)
-            })
+                    wikis[index].push(v)
+                })
+            }
+
+            // 开始播放
+            $(".wiki").empty();
+            $("body").css("zoom", "2")
+            show(show_index)
         }
-
-        // 开始播放
-        $(".wiki").empty();
-        $("body").css("zoom", "2")
-        show(show_index)
 
         // 绑定按键
         $("body").keydown(function(e){
