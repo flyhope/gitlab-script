@@ -90,7 +90,7 @@
 
             // 开始播放
             $(".wiki").empty();
-            $("body").css("zoom", "2")
+            $("body").css("zoom", "2");
             show(show_index)
         }
 
@@ -125,8 +125,18 @@
     // 展示内容
     function show(index) {
         current = index;
-        $(".wiki").html("").hide().append(wikis[index]).fadeIn();
+        $(".wiki").html("").hide().css({"padding-top":"30px"}).append(wikis[index]).fadeIn();
         $("body,html").scrollTop(0);
+        $("h1,h2").css({
+            "position":"fixed",
+            "z-index":9999,
+            "top":0,
+            "left":0,
+            "width":"100%",
+            "padding":"6px 15px 8px 15px",
+            "background-color":"black",
+            "color":"white"
+        });
     }
 
 })()
