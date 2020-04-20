@@ -2,7 +2,7 @@
 // @name              Gitlab Wiki Player
 // @name:zh-cn        Gitlab WIKI 播放器
 // @namespace         http://chengxuan.li
-// @version           0.3
+// @version           12.9.0
 // @description       Play Gitlab wiki like PPT!
 // @description:zh-cn 像PPT一样播放Gitlab WIKI
 // @author            Leelmes <i@chengxuan.li>
@@ -19,6 +19,9 @@
 
     // WIKI每页数据
     let wikis = [];
+
+    // WIKI DOM对象
+    let $wiki = $(".md[data-qa-selector=wiki_page_content]")
 
     // 当前看的是第几页（从0开始计算）
     let current = -1;
@@ -40,7 +43,7 @@
         });
 
         // 绑定H1/H2标题播放按钮
-        $(".wiki").on("click", "[data-node=wiki-ppt-play-page]", function() {
+        $wiki.on("click", "[data-node=wiki-ppt-play-page]", function() {
             $(this).remove();
             play($(this).data("index"));
         }).find("h1,h2").each(function(k, v) {
@@ -63,10 +66,10 @@
         // 删除mergeRequest除主体外全部元素
         $(".alert-wrapper,.detail-page-header,.detail-page-description,.mr-state-widget,.content-block,.merge-request-tabs-holder,.mr-version-controls").remove();
 
-        if ($(".wiki").length) {
+        if ($wiki.length) {
             // 整理数据，并清空现有WIKI数据结构
             if (!wikis.length) {
-                $(".wiki").children().each(function(k, v){
+                $wiki.children().each(function(k, v){
                     let index = wikis.length - 1;
                     let newIndex = false;
                     if (index < 0) {
@@ -89,7 +92,7 @@
             }
 
             // 开始播放
-            $(".wiki").empty();
+            $wiki.empty();
             $("body").css("zoom", "2");
             show(show_index)
         }
@@ -125,7 +128,7 @@
     // 展示内容
     function show(index) {
         current = index;
-        $(".wiki").html("").hide().css({"padding-top":"30px"}).append(wikis[index]).fadeIn();
+        $wiki.html("").hide().css({"padding-top":"30px"}).append(wikis[index]).fadeIn();
         $("body,html").scrollTop(0);
         $("h1,h2").css({
             "position":"fixed",
