@@ -2,13 +2,14 @@
 // @name              Gitlab Wiki Player
 // @name:zh-cn        Gitlab WIKI 播放器
 // @namespace         http://chengxuan.li
-// @version           12.9.0
+// @version           12.9.1
 // @description       Play Gitlab wiki like PPT!
 // @description:zh-cn 像PPT一样播放Gitlab WIKI
 // @author            Leelmes <i@chengxuan.li>
 // @match             http*://*/*/wikis/*
 // @match             http*://*/*/merge_requests/*
 // @match             http*://*/*/snippets/*
+// @match             http*://*/*/issues/*
 // @contributionURL   https://www.paypal.me/flyhope
 // @grant             none
 // @supportURL        https://github.com/flyhope/gitlab-script/issues
@@ -33,9 +34,10 @@
 
     // 主入口
     function main() {
-        // 插入播放按钮
+        // 插入WIKI播放按钮
         $(".nav-controls").prepend('<a id="wiki-ppt-play" class="btn" href="javascript:void(0)"><span class="fa fa-play"></span></a>');
-        $(".issue-btn-group,.detail-page-header-actions > .hidden-xs").prepend('<a id="wiki-ppt-play" class="btn pull-left" href="javascript:void(0)"><span class="fa fa-play"></span></a>');
+        // 插入MergeRequest、ISSUE播放按钮
+        $(".detail-page-header-actions a.btn:first").before('<a id="wiki-ppt-play" class="btn pull-left" href="javascript:void(0)"><span class="fa fa-play"></span></a>');
 
         // 绑定PPT按钮播放事件
         $("#wiki-ppt-play").click(function() {
@@ -63,8 +65,31 @@
         $(".content-wrapper").removeClass("content-wrapper");
         $(".layout-page").removeClass("page-with-contextual-sidebar right-sidebar-expanded").css("padding-left", 0);
 
-        // 删除mergeRequest除主体外全部元素
-        $(".alert-wrapper,.detail-page-header,.detail-page-description,.mr-state-widget,.content-block,.merge-request-tabs-holder,.mr-version-controls").remove();
+        // 删除mergeRequest除主体外全部元素，调整吸顶
+        let mergeRequestTimer;
+        let mergeRequestShow = () => {
+            if ($(".file-title").length) {
+                $(".alert-wrapper,.detail-page-header,.mr-state-widget,.merge-request-tabs-holder,.mr-version-controls").remove();
+                $(".file-title").css("top", 0);
+                clearInterval(mergeRequestTimer)
+            }
+        }
+
+        // MergeRequest调整
+        if (location.href.search("/merge_requests/") > 0) {
+            if ($("#diffs-tab.active").length) {
+                mergeRequestShow()
+            } else {
+                $("#diffs-tab a").trigger("click")
+                mergeRequestTimer = setInterval(mergeRequestShow, 200)
+            }
+        }
+
+        // 删除ISSUE讨论区，并全屏
+        if (location.href.search("/issues/") > 0) {
+            $(".emoji-block,.issuable-discussion").remove();
+            fullScreen()
+        }
 
         if ($wiki.length) {
             // 整理数据，并清空现有WIKI数据结构
@@ -93,8 +118,8 @@
 
             // 开始播放
             $wiki.empty();
-            $("body").css("zoom", "2");
             show(show_index)
+            fullScreen()
         }
 
         // 绑定按键
@@ -142,4 +167,18 @@
         });
     }
 
+    // 全屏
+    function fullScreen() {
+        let element = document.documentElement;
+        if(element.requestFullscreen) {
+            element.requestFullscreen();
+        } else if(element.mozRequestFullScreen) {
+            element.mozRequestFullScreen();
+        } else if(element.webkitRequestFullScreen) {
+            element.webkitRequestFullScreen();
+        } else if (document.msExitFullscreen) {
+            document.msExitFullscreen();
+        }
+        $("body").css("zoom", "2");
+    };
 })()
