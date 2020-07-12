@@ -10,6 +10,7 @@
 // @match             http*://*/*/merge_requests/*
 // @match             http*://*/*/snippets/*
 // @match             http*://*/*/issues/*
+// @include           http*://*/-/blob/*/*.md
 // @contributionURL   https://www.paypal.me/flyhope
 // @grant             none
 // @supportURL        https://github.com/flyhope/gitlab-script/issues
@@ -34,10 +35,12 @@
 
     // 主入口
     function main() {
-        // 插入WIKI播放按钮
+        // WIKI：插入播放按钮
         $(".nav-controls").prepend('<a id="wiki-ppt-play" class="btn" href="javascript:void(0)"><span class="fa fa-play"></span></a>');
-        // 插入MergeRequest、ISSUE播放按钮
+        // MergeRequest、ISSUE：插入播放按钮
         $(".detail-page-header-actions a.btn:first").before('<a id="wiki-ppt-play" class="btn pull-left" href="javascript:void(0)"><span class="fa fa-play"></span></a>');
+        // Blob：插入播放按钮
+        $(".tree-controls").prepend('<a id="wiki-ppt-play" class="btn" href="javascript:void(0)"><span class="fa fa-play"></span></a>');
 
         // 绑定PPT按钮播放事件
         $("#wiki-ppt-play").click(function() {
@@ -88,6 +91,14 @@
         // 删除ISSUE讨论区，并全屏
         if (location.href.search("/issues/") > 0) {
             $(".emoji-block,.issuable-discussion").remove();
+            fullScreen()
+        }
+
+        // 删除blob所有内容，调整样式，并全屏
+        if (location.href.search("/-/blob/") > 0) {
+            $(".nav-block,.info-well,.js-file-title").remove();
+            $(".container-fluid").removeClass("container-fluid");
+            $(".file-content").css("padding", "8px");
             fullScreen()
         }
 
