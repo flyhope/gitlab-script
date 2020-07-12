@@ -2,7 +2,7 @@
 // @name              Gitlab Wiki Player
 // @name:zh-cn        Gitlab WIKI 播放器
 // @namespace         http://chengxuan.li
-// @version           12.9.1
+// @version           12.9.2
 // @description       Play Gitlab wiki like PPT!
 // @description:zh-cn 像PPT一样播放Gitlab WIKI
 // @author            Leelmes <i@chengxuan.li>
