@@ -2,7 +2,7 @@
 // @name              Gitlab Wiki Player
 // @name:zh-cn        Gitlab WIKI 播放器
 // @namespace         http://chengxuan.li
-// @version           12.9.2
+// @version           13.4.4
 // @description       Play Gitlab wiki like PPT!
 // @description:zh-cn 像PPT一样播放Gitlab WIKI
 // @author            Leelmes <i@chengxuan.li>
@@ -90,7 +90,9 @@
 
         // 删除ISSUE讨论区，并全屏
         if (location.href.search("/issues/") > 0) {
-            $(".emoji-block,.issuable-discussion").remove();
+            let $style = $('<style type="text/css">.issue-sticky-header{ display:none }</style>')
+            $("head").append($style)
+            $(".emoji-block,.issuable-discussion,.flash-container").remove();
             fullScreen()
         }
 
