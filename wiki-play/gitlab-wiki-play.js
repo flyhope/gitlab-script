@@ -2,7 +2,7 @@
 // @name              Gitlab Wiki Player
 // @name:zh-cn        Gitlab WIKI 播放器
 // @namespace         http://chengxuan.li
-// @version           13.4.4
+// @version           13.12.8
 // @description       Play Gitlab wiki like PPT!
 // @description:zh-cn 像PPT一样播放Gitlab WIKI
 // @author            Leelmes <i@chengxuan.li>
@@ -36,11 +36,12 @@
     // 主入口
     function main() {
         // WIKI：插入播放按钮
-        $(".nav-controls").prepend('<a id="wiki-ppt-play" class="btn" href="javascript:void(0)"><span class="fa fa-play"></span></a>');
+        $(".nav-controls").prepend('<a id="wiki-ppt-play" class="btn" href="javascript:void(0)">🍨</a>');
         // MergeRequest、ISSUE：插入播放按钮
-        $(".detail-page-header-actions a.btn:first").before('<a id="wiki-ppt-play" class="btn pull-left" href="javascript:void(0)"><span class="fa fa-play"></span></a>');
+        $(".detail-page-header-actions a.btn:first").before('<a id="wiki-ppt-play" class="btn btn-grouped" href="javascript:void(0)">🍨</a>');
+        $(".detail-page-header-actions > button:first").after('<a id="wiki-ppt-play" class="btn btn-grouped" href="javascript:void(0)">🍨</a>');
         // Blob：插入播放按钮
-        $(".tree-controls").prepend('<a id="wiki-ppt-play" class="btn" href="javascript:void(0)"><span class="fa fa-play"></span></a>');
+        $(".tree-controls").prepend('<a id="wiki-ppt-play" class="btn" href="javascript:void(0)">🍨</a>');
 
         // 绑定PPT按钮播放事件
         $("#wiki-ppt-play").click(function() {
@@ -54,7 +55,7 @@
         }).find("h1,h2").each(function(k, v) {
             let obj = $(v)
             obj.hover(function(){
-                obj.append(' <a data-node="wiki-ppt-play-page" data-index="' + k + '" href="javascript:void(0)"><span class="fa fa-play"></span></a>');
+                obj.append(' <a data-node="wiki-ppt-play-page" data-index="' + k + '" href="javascript:void(0)">🍨</a>');
             }, function() {
                 obj.find("[data-node=wiki-ppt-play-page]").remove();
             })
@@ -165,8 +166,10 @@
 
     // 展示内容
     function show(index) {
+        console.log(wikis)
         current = index;
-        $wiki.html("").hide().css({"padding-top":"30px"}).append(wikis[index]).fadeIn();
+        $wiki.html("").hide().css({"padding-top":"30px"}).append(wikis[index])
+        $wiki.show();
         $("body,html").scrollTop(0);
         $("h1,h2").css({
             "position":"fixed",
